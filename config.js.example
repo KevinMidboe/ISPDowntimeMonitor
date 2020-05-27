@@ -1,0 +1,9 @@
+
+module.exports = {
+  senderEmail: '',
+  senderPassword: '',
+  recipientEmail: '',
+  url: '',
+  debug: false
+}
+
