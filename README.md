@@ -20,6 +20,7 @@ yarn
 
 ## Config
 To be notified when any services are down you need to fill in a gmail email and password and a recipient email address. 
+It is highly adviced (and required if 2FA is enabled) to create a unique App Password at: https://myaccount.google.com/apppasswords.
 
 Go to the ISP's page for checking service status by address https://www.telenor.no/privat/kundeservice/dmf/. After entering your address copy the pages url.
 
