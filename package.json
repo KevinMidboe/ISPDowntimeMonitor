@@ -1,0 +1,13 @@
+{
+  "name": "ISPDowntimeMonitor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.4.6",
+    "puppeteer": "^3.0.4"
+  }
+}
