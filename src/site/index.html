@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ISP downtime monitor</title>
+  <meta charset="UTF-8">
+  <link  href="style.css"  type="text/css" rel="stylesheet">
+</head>
+<body>
+  <h1>Nedetid rapport</h1>
+  <div class="page-container">
+    <h2>Oppetid</h2>
+    <div class="container" id="bar-graph">
+      <!-- BAR GRAPH -->
+    </div>
+
+    <div class="color-indicators">
+      <label class="color-indicator-box green"></label>
+      <span>Uptime</span>
+
+      <label class="color-indicator-box red"></label>
+      <span>Downtime</span>
+    </div>
+    <hr />
+
+    <h2>Indicent log</h2>
+    <div class="container" id="indicent-logs">
+      <table id="log-table">
+        <thead><tr>
+          <th>Date</th>
+          <th>Incident message</th>
+          <th>Duration</th>
+        </tr></thead>
+
+        <tbody><tr>
+          <td>31 Mai 2020 22:34</td>
+          <td>OK</td>
+          <td>6d 4t 32min</td>
+        </tr>
+        <tr>
+          <td>31 Mai 2020 22:34</td>
+          <td>OK</td>
+          <td>6d 4t 32min</td>
+        </tr>
+        <tr>
+          <td>31 Mai 2020 22:34</td>
+          <td>OK</td>
+          <td>6d 4t 32min</td>
+        </tr></tbody>
+      </table>
+    </div>
+
+  </div>
+</body>
+
+<script src="fetchLogsAndGenerateTable.js" type="text/javascript"></script>
+<script src="fetchUptimeAndGenerateBarGraph.js" type="text/javascript"></script>
+</html>
