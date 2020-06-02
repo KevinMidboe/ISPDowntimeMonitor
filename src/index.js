@@ -55,8 +55,7 @@ const exitWithError = (err, message=undefined) => {
   if (config.debug === true)
     console.error(err)
 
-  closeBrowser();
-  process.exit(1);
+  closeBrowserAndExit(1);
 }
 
 const dismissCookiePrompt = page => {
@@ -114,8 +113,9 @@ const webscraper = async pageURL => {
     .catch(err => exitWithError(err, `Unable to reach url: ${pageURL}`))
 }
 
-function closeBrowser() {
+function closeBrowserAndExit(status=0) {
   browser.close();
+  process.exit(status);
 }
 
 
@@ -126,7 +126,7 @@ function run() {
     .then(page => getServiceMessages(page))
     .then(serviceMessages => commitServiceEventToDatabase(serviceMessages, pdfFilename))
     .then(serviceMessages => notifyIfDown(serviceMessages))
-    .then(closeBrowser)
+    .then(closeBrowserAndExit)
 }
 
 run();
