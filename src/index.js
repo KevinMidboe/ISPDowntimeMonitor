@@ -6,13 +6,17 @@ const config = require('../config')
 const Mail = require( './mail.js');
 const mail = new Mail();
 
+const { commitServiceEventToDatabase, getAllEvents } = require('./db.js');
+
 let browser = undefined;
 if (config.debug == false)
   console.log = () => {}
 
+const pdfFilename = config['pdfFilename'] || 'telenor-downtime.pdf';
+
 const savePageToPDF = page => {
   const pdfOptions = {
-    path: `telenor-downtime.pdf`,
+    path: pdfFilename,
     format: "A4",
     printBackground: true,
     displayHeaderFooter: true,
@@ -120,6 +124,7 @@ function run() {
     .then(page => dismissCookiePrompt(page))
     .then(page => savePageToPDF(page))
     .then(page => getServiceMessages(page))
+    .then(serviceMessages => commitServiceEventToDatabase(serviceMessages, pdfFilename))
     .then(serviceMessages => notifyIfDown(serviceMessages))
     .then(closeBrowser)
 }
