@@ -26,8 +26,26 @@ const commitServiceEventToDatabase = async (serviceMessages, pdfFilename) => {
 }
 
 const getAllEvents = () => Event.find().exec()
+const getEventById = (id) => Event.findById(id).exec()
+
+const getAlternatingEventStatuses = () => Event.find().exec()
+  .then(events => {
+    let lastEventStatus;
+    return events.filter(event => {
+      if (event.isOk != lastEventStatus) {
+        lastEventStatus = event.isOk;
+        return event
+      }
+    })
+  })
+
+const getEventStatus = () => Event.find().select('date isOk').exec()
+  .then(events => events.reverse())
 
 module.exports = {
   commitServiceEventToDatabase,
-  getAllEvents
+  getAllEvents,
+  getEventById,
+  getAlternatingEventStatuses,
+  getEventStatus
 }
