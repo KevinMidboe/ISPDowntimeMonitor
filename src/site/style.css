@@ -1,4 +1,4 @@
-/**/
+/* Root css variables */
 :root {
   color-scheme: light;
   --text-color: black;
@@ -51,11 +51,9 @@ h1 {
 h2 {
   font-size: 2rem;
 }
-
-.container {
-  border-radius: 0.5rem;
+button {
+  cursor: pointer;
 }
-
 hr {
   margin: 2.5rem 1rem;
   height: 1px;
@@ -63,9 +61,17 @@ hr {
   border: none
 }
 
+.container {
+  border-radius: 0.5rem;
+}
 
+.centered {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
 
-
+/* uptime bar graph styling */
 #bar-graph {
   position: relative;
   width: 100%;
@@ -73,15 +79,10 @@ hr {
   display: flex;
   flex-direction: row-reverse;
   border-radius: 0.4rem;
-  /*overflow: hidden;*/
-  /*margin: 2rem 0;*/
-  background-color: var(--page-background-color-40);
+  background-color: var(--page-background-color-80);
 }
 
 .event.error {
-/*  position: absolute;
-  height: 100%;
-  width: 0.5rem;*/
   background-color: var(--red);
 }
 
@@ -91,6 +92,10 @@ hr {
   background-color: var(--green);
   position: relative;
   transition: transform 0.1s ease;
+}
+.event:first-of-type {
+  border-top-right-radius: 0.4rem;
+  border-bottom-right-radius: 0.4rem;
 }
 .event:not(:last-of-type) {
   margin-left: 1px;
@@ -118,16 +123,6 @@ hr {
   visibility: visible;
 }
 
-/*.error:nth-of-type(1) {
-  left: 2rem;
-}
-.error:nth-of-type(2) {
-  left: 22rem;
-}
-.error:nth-of-type(3) {
-  right: 12rem;
-}*/
-
 .color-indicators {
   display: flex;
   flex-direction: row;
@@ -150,9 +145,6 @@ hr {
   font-weight: 500;
   letter-spacing: 1.5px;
 }
-/*.color-indicator-box:first-child) {
-  background-color: red;
-}*/
 
 .green {
   background-color: var(--green);
@@ -161,9 +153,7 @@ hr {
   background-color: var(--red);
 }
 
-
-
-
+/* table styling */
 #log-table {
   width: 100%;
 }
@@ -195,22 +185,73 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-
-
+/* popover styling */
 #popover {
-  position: absolute;
+  z-index: 2;
+  position: fixed;
+  overflow-y:scroll;
+  overflow-x:hidden;
+
   top: 0;
   left: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  min-height: 100vh;
+  height: min-content;
   width: 100vw;
-  height: 100vh;
   background-color: var(--page-background-color-40);
 }
 #popover .container {
+  position: absolute;
+  margin-top: 3rem;
   width: 70%;
-  height: 80%;
+  height: min-content;
+  min-height: 80%;
   background-color: var(--background-color);
   border-radius: 0.75rem;
+  padding: 1.5rem;
+  font-size: 1.2rem;
+}
+
+#popover div:not(:last-of-type) {
+  margin-bottom: 0.4rem;
+}
+
+#popover img {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+#popover a {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+#popover .close.topLeft {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+
+@media (max-width: 600px) {
+  body {
+    margin: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .page-container {
+    padding: .1px 1rem 1.5rem 1rem;
+  }
+
+  #log-table th:first-of-type, #log-table td:first-of-type {
+    display: none;
+  }
+
+  #popover .container {
+    margin: 2rem 0;
+    padding-top: 2.5rem;
+    width: 80%;
+  }
 }
