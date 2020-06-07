@@ -4,7 +4,11 @@ const fs = require('fs');
 const app = express()
 const config = require('../config')
 
-const { getAllEvents, getEventById, getAlternatingEventStatuses, getEventStatus } = require('./db.js');
+const { getAllEvents,
+  getEventById,
+  getAlternatingEventStatuses,
+  getEventStatus
+} = require('./db.js');
 
 const PORT = 3000;
 
@@ -14,22 +18,22 @@ app.get('/', (req, res) => res.sendFile('index.html'));
 
 
 // Data api endpoints
-app.get('/logs', (req, res) => 
+app.get('/logs', (req, res) =>
   getAllEvents()
     .then(allEvents => res.send(allEvents))
 )
 
-app.get('/logs/alternating', (req, res) => 
+app.get('/logs/alternating', (req, res) =>
   getAlternatingEventStatuses()
     .then(allEvents => res.send(allEvents))
 )
 
-app.get('/logs/:id', (req, res) => 
+app.get('/logs/:id', (req, res) =>
   getEventById(req.params.id)
     .then(event => res.send(event))
 )
 
-app.get('/uptime', (req, res) => 
+app.get('/uptime', (req, res) =>
   getEventStatus()
     .then(eventStatuses => res.send(eventStatuses))
 )
