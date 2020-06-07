@@ -1,6 +1,7 @@
 # Project files to ignore
 config.js
 pdfExports/*
+!pdfExports
 
 *.swp
 .DS_Store
