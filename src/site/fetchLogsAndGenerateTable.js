@@ -1,52 +1,38 @@
-
-let indicentLogs = [
-  {
-    id: 1,
-    date: new Date('2020/05/30 01:20:38').toISOString(),
-    message: 'Vi har en feil i mobilnettet på denne adressen. Vi jobber med å løse problemet.',
-    duration: '6d 4t 32min'
-  }, {
-    id: 2,
-    date: new Date('2020/04/22 13:47:25').toISOString(),
-    message: 'Vi har en feil i internett på denne adressen. Vi jobber med å løse problemet.',
-    duration: '1d 2t 54min'
-  }
-]
-indicentLogs = indicentLogs.reverse()
-
-const newDiv = () => document.createElement('div');
-
-const closePopover = () => document.getElementById('popover').remove();
-
-const tableRowFromLog = (log, table) => {
+const tableRowFromLog = (log, table, allLogs) => {
   const row = table.insertRow(0);
-  row.setAttribute('incident-id', log.id)
+  row.setAttribute('incident-id', log._id)
   row.onclick = clickRowPopupIncident;
-  row.insertCell(0).innerHTML = log.date;
+  row.insertCell(0).innerHTML = new Date(log.date).toLocaleString();
   row.insertCell(1).innerHTML = log.message;
-  row.insertCell(2).innerHTML = log.duration;
+
+  let duration = log['duration'] ? log.duration : '-';
+  if (table.children.length > 1) {
+    const prevEventId = table.children[1].getAttribute('incident-id');
+    const prevEvent = allLogs.find(log => log._id == prevEventId)
+
+    duration = (new Date(log.date) - new Date(prevEvent.date)) / 1000;
+    if (duration > 600)
+      duration = (duration / 60).toFixed(2).toString() + ' m'
+    else
+      duration = duration.toFixed(2).toString() + ' s'
+  }
+  row.insertCell(2).innerHTML = duration;
 }
 
 const clickRowPopupIncident = (event) => {
   const cell = event.toElement;
   const row = cell.parentElement;
   const indicentId = row.getAttribute('incident-id');
-
-  const popover = newDiv()
-  const container = newDiv()
-  popover.id = 'popover'
-  popover.onclick = closePopover;
-  container.className = 'container'
-  container.innerText = Object.values(indicentLogs[indicentId]).join('\n')
-  popover.appendChild(container)
-  document.body.appendChild(popover);
+  popover(indicentId)
 }
 
 function fetchLogsAndGenerateTable() {
   const table = document.getElementById('log-table');
   const tableBody = table.tBodies[0];
 
-  indicentLogs.map(log => tableRowFromLog(log, tableBody))
+  fetch('/logs/alternating')
+    .then(resp => resp.json())
+    .then(indicentLogs => indicentLogs.map(log => tableRowFromLog(log, tableBody, indicentLogs)))
 }
 
 fetchLogsAndGenerateTable()
