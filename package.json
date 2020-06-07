@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "mongoose": "^5.9.17",
     "nodemailer": "^6.4.6",
     "puppeteer": "^3.0.4"
   }
