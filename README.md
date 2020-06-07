@@ -3,6 +3,8 @@ Monitor and notify if ISP reports any services for a given address non-operation
 
 > Note! This is currently supported for addresses that have telenor as their ISP.
 
+![](https://imgur.com/9lTiq5U.png)
+
 # Setup
 If this is your first node project jump to Node and Yarn setup [below](#node-and-yarn-setup).
 
@@ -18,7 +20,7 @@ Install required packages:
 yarn
 ```
 
-## Config
+# Config
 To be notified when any services are down you need to fill in a gmail email and password and a recipient email address. 
 It is highly adviced (and required if 2FA is enabled) to create a unique App Password at: https://myaccount.google.com/apppasswords.
 
@@ -44,11 +46,64 @@ module.exports = {
 
 Debug can be set to true for some more feedback about whats happening during execution.
 
-## Usage 
-To run the project use the `start` command defined in package.json:
+### Optional
+Can also set `pdfFilename` to overwrite filename prefix (default: `telenor-downtime`).
 
+# Usage
+We have two commands `start` & `scrape`. Start boots calls express server to start to server webpage for visual representation of data; and Scrape for checking and logging contents of ISP monitor page.
+
+Start the webserver:
 ```bash
 yarn start
+```
+Open http://localhost:3000/ in your browser.
+
+Run the scraper:
+```bash
+yarn scrape
+```
+This saves a pdf of the page to `pdfExports/` within the project folder, and logs the uptime status to db.
+
+# Running as a service
+If on any linux platform you should have `systemd` installed. We want to create a service that both runs & restarts our webserver if necessary and want a scheduled job to run for scraping.   
+
+Remember to replace `YOUR_PROJECT_DIRECTORY` w/ the full path to where you have the `ISPDowntimeMonitor/` folder.   
+
+Main server start service:
+```
+# /etc/systemd/system/ispmonitor.service
+
+[Unit]
+Description=ISP monitor daemon
+Wants=isp-scraper.timer
+
+[Service]
+WorkingDirectory=YOUR_PROJECT_DIRECTORY
+ExecStart=/usr/bin/yarn start
+ ExecStartPre=/usr/bin/docker start mongodb
+Restart=always
+
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=ispmonitor
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Timer service:  
+```
+# /etc/systemd/system/isp-scraper.timer
+
+[Unit]
+Description=Run scraper for isp monitor every 30 minutes.
+
+...
+TODO COMPLETE THIS SETUP
 ```
 
 # Node and yarn setup
@@ -70,4 +125,3 @@ curl -o- -L https://yarnpkg.com/install.sh | bash
 ```
 
 We are done! Jump [back up](#setup) to continue project setup!
-
