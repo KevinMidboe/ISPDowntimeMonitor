@@ -28,7 +28,6 @@ const savePageToPDF = page => {
                         </span>
                     </div>`,
     footerTemplate: `<div style="font-size:7px;white-space:nowrap;margin-left:38px;width:100%;">
-                        Generated PDF
                         <span style="display:inline-block;float:right;margin-right:10px;">
                             <span class="pageNumber"></span> / <span class="totalPages"></span>
                         </span>
@@ -109,7 +108,7 @@ const webscraper = async pageURL => {
   const page = await browser.newPage()
 
   console.log(`Opening page with url: ${pageURL}`)
-  return page.goto(pageURL)
+  return page.goto(pageURL, { waitUntil: 'networkidle0' })
     .then(() => Promise.resolve(page))
     .catch(err => exitWithError(err, `Unable to reach url: ${pageURL}`))
 }
