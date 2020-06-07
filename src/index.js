@@ -12,11 +12,12 @@ let browser = undefined;
 if (config.debug == false)
   console.log = () => {}
 
-const pdfFilename = config['pdfFilename'] || 'telenor-downtime.pdf';
+const dateString = new Date().getTime();
+const pdfFilename = (config['pdfFilename'] || 'telenor-downtime') + `_${dateString}.pdf`;
 
 const savePageToPDF = page => {
   const pdfOptions = {
-    path: pdfFilename,
+    path: `pdfExports/${pdfFilename}`,
     format: "A4",
     printBackground: true,
     displayHeaderFooter: true,
