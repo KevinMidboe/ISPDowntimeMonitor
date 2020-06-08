@@ -22,9 +22,11 @@ yarn
 
 If you don't have mongo running, run it using docker:
 ```bash
-sudo docker run -d --name mongodb -p 27017:27017 -v $PWD/db:/data/db mongo
+mkdir -p $HOME/docker/mongodb/
+sudo docker run -d --name mongodb -p 27017:27017 -v $HOME/docker/mongodb:/data/db mongo
 ```
-Install docker from: https://docs.docker.com/get-docker/.
+Install docker from: https://docs.docker.com/get-docker/.  
+> Note! The folderpath `$HOME/docker/mongodb/` can be change to any other folder.
 
 # Config
 Create a local configuration file from the included example config:   
