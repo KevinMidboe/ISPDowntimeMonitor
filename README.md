@@ -55,9 +55,8 @@ module.exports = {
 }
 ```
 
-Debug can be set to true for some more feedback about whats happening during execution.
-
 ### Optional
+Debug set to `true` for debug logs.  
 Can also set `pdfFilename` to overwrite filename prefix (default: `telenor-downtime`).
 
 # Usage
@@ -129,7 +128,7 @@ Ubuntu/raspberry pi users can add node to apt following these instructions: http
 ## Yarn
 To get yarn check their site for always up-to-date info here https://classic.yarnpkg.com/en/docs/install/#mac-stable.
 
-One of the easiest ways to install Yarn on macOS and generic Unix environments is via our shell script. You can install Yarn by running the following code in your terminal:
+One of the easiest ways to install Yarn on macOS and generic Unix environments is via their shell script. You can install Yarn by running the following code in your terminal:
 
 ```bash
 curl -o- -L https://yarnpkg.com/install.sh | bash
