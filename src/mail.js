@@ -21,15 +21,14 @@ class Mail {
 
   sendMail = message => this.transporter.sendMail(message);
 
-  sendAttachment = fileRef => {
+  sendAttachment = (fileRef, bodyText) => {
     const message = {
-      from: `"Fred Foo 👻" <${this.sender}>`,
+      from: `"ISPDowntimeMonitor" <${this.sender}>`,
       to: this.recipient,
-      subject: 'Telenor nedetid',
-      text: "hello wordl",
-      html: "<p>hello wordl</p>",
+      subject: 'Nedetid på ditt nett!',
+      html: `<b>Melding fra telenor:</b><br/><span>${bodyText}</span>`,
       attachments: [{
-        path: fileRef 
+        path: fileRef
       }]
     }
 
