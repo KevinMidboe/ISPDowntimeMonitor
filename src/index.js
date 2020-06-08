@@ -6,7 +6,11 @@ const config = require('../config')
 const Mail = require( './mail.js');
 const mail = new Mail();
 
-const { commitServiceEventToDatabase, getAllEvents } = require('./db.js');
+const {
+  commitServiceEventToDatabase,
+  getAllEvents,
+  anyDowntimeThisCalendarMonth
+} = require('./db.js');
 
 let browser = undefined;
 if (config.debug == false)
@@ -118,6 +122,8 @@ function closeBrowserAndExit(status=0) {
   process.exit(status);
 }
 
+const resolveIfNoDowntimeYetThisMonth = msg => anyDowntimeThisCalendarMonth()
+  .then(anyDowntime => anyDowntime == false ? Promise.resolve(msg) : Promise.reject())
 
 function run() {
   webscraper(config.url)
@@ -125,8 +131,9 @@ function run() {
     .then(page => savePageToPDF(page))
     .then(page => getServiceMessages(page))
     .then(serviceMessages => commitServiceEventToDatabase(serviceMessages, pdfFilename))
+    .then(serviceMessages => resolveIfNoDowntimeYetThisMonth(serviceMessages))
     .then(serviceMessages => notifyIfDown(serviceMessages))
-    .then(closeBrowserAndExit)
+    .finally(closeBrowserAndExit)
 }
 
 run();

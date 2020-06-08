@@ -42,10 +42,25 @@ const getAlternatingEventStatuses = () => Event.find().exec()
 const getEventStatus = () => Event.find().select('date isOk').exec()
   .then(events => events.reverse())
 
+const anyDowntimeThisCalendarMonth = async () => {
+  const today = new Date();
+  const year = today.getFullYear()
+  const month = today.getMonth();
+
+  const query = {
+    "date": { "$gte": new Date(year, month, 1) },
+    "isOk": false
+  }
+
+  return Event.find(query)
+    .then(errorsThisMonth => errorsThisMonth.length > 0)
+}
+
 module.exports = {
   commitServiceEventToDatabase,
   getAllEvents,
   getEventById,
   getAlternatingEventStatuses,
-  getEventStatus
+  getEventStatus,
+  anyDowntimeThisCalendarMonth
 }
