@@ -18,10 +18,11 @@ if (config.debug == false)
 
 const dateString = new Date().getTime();
 const pdfFilename = (config['pdfFilename'] || 'telenor-downtime') + `_${dateString}.pdf`;
+const pdfPath = `pdfExports/${pdfFilename}`
 
 const savePageToPDF = page => {
   const pdfOptions = {
-    path: `pdfExports/${pdfFilename}`,
+    path: pdfPath,
     format: "A4",
     printBackground: true,
     displayHeaderFooter: true,
@@ -98,10 +99,11 @@ const notifyIfDown = serviceMessages => {
   const servicesDown = serviceMessages.filter(message => message.isOk == false)
 
   if (servicesDown.length) {
-    console.log("Following services are down:\n", servicesDown)
+    console.log("Number of services down: ", servicesDown.length)
 
-    mail.sendAttachment('./telenor-downtime.pdf')
+    return mail.sendAttachment(pdfPath, servicesDown[0].statusText)
       .then(resp => console.log(`Message id: ${resp.messageId} sent.\nResponse content: ${resp}`))
+      .catch(err => console.error('Error from sendmail:', err))
   } else {
     console.info("All service operational");
   }
@@ -118,6 +120,7 @@ const webscraper = async pageURL => {
 }
 
 function closeBrowserAndExit(status=0) {
+  console.log('✋ closing shop')
   browser.close();
   process.exit(status);
 }
