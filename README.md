@@ -20,7 +20,18 @@ Install required packages:
 yarn
 ```
 
+If you don't have mongo running, run it using docker:
+```bash
+sudo docker run -d --name mongodb -p 27017:27017 -v $PWD/db:/data/db mongo
+```
+Install docker from: https://docs.docker.com/get-docker/.
+
 # Config
+Create a local configuration file from the included example config:   
+```bash
+cp config.js.example config.js
+```
+
 To be notified when any services are down you need to fill in a gmail email and password and a recipient email address. 
 It is highly adviced (and required if 2FA is enabled) to create a unique App Password at: https://myaccount.google.com/apppasswords.
 
@@ -50,7 +61,7 @@ Debug can be set to true for some more feedback about whats happening during exe
 Can also set `pdfFilename` to overwrite filename prefix (default: `telenor-downtime`).
 
 # Usage
-We have two commands `start` & `scrape`. Start boots calls express server to start to server webpage for visual representation of data; and Scrape for checking and logging contents of ISP monitor page.
+We have two commands `start` & `scrape`. Start boots express serving the website for visual representation of downtime data; and Scrape for checking and logging contents of ISP monitor page.
 
 Start the webserver:
 ```bash
@@ -62,7 +73,7 @@ Run the scraper:
 ```bash
 yarn scrape
 ```
-This saves a pdf of the page to `pdfExports/` within the project folder, and logs the uptime status to db.
+This saves a pdf of the page to `pdfExports/` within the project folder, and logs the uptime status to the database.
 
 # Running as a service
 If on any linux platform you should have `systemd` installed. We want to create a service that both runs & restarts our webserver if necessary and want a scheduled job to run for scraping.   
