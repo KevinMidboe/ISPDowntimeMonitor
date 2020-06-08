@@ -11,10 +11,16 @@ const tableRowFromLog = (log, table, allLogs) => {
     const prevEvent = allLogs.find(log => log._id == prevEventId)
 
     duration = (new Date(log.date) - new Date(prevEvent.date)) / 1000;
-    if (duration > 600)
-      duration = (duration / 60).toFixed(2).toString() + ' m'
-    else
+    if (duration < 600)                 // show as seconds up to 10 minutes
       duration = duration.toFixed(2).toString() + ' s'
+    else if (duration < 3600)           // show as minutes up to 1 hours
+      duration = (duration / 600).toFixed(2).toString() + ' m'
+    else if (duration < 172800)         // show as hours up to 48 hours
+      duration = (duration / 3600).toFixed(2).toString() + ' h'
+    else if (duration < 604800)         // show as days up to 1 week
+      duration = (duration / 86400).toFixed(2).toString() + ' d'
+    else                                // show as week after 1 week
+      duration = (duration / 604800).toFixed(2).toString() + ' w'
   }
   row.insertCell(2).innerHTML = duration;
 }
