@@ -77,26 +77,25 @@ yarn scrape
 This saves a pdf of the page to `pdfExports/` within the project folder, and logs the uptime status to the database.
 
 # Running as a service
-If on any linux platform you should have `systemd` installed. We want to create a service that both runs & restarts our webserver if necessary and want a scheduled job to run for scraping.   
+If running on any linux platform you should have `systemd` installed. We want to create a service that both runs & restarts our webserver if necessary and that runs our scrape command on a scheduled interval.   
 
-Remember to replace `YOUR_PROJECT_DIRECTORY` w/ the full path to where you have the `ISPDowntimeMonitor/` folder.   
+Remember to replace `YOUR_PROJECT_DIRECTORY` with the full path to where you have the `ISPDowntimeMonitor/` folder.   
 
-Main server start service:
+Service for running start server command:
 ```
 # /etc/systemd/system/ispmonitor.service
 
 [Unit]
 Description=ISP monitor daemon
-Wants=isp-scraper.timer
 
 [Service]
 WorkingDirectory=YOUR_PROJECT_DIRECTORY
 ExecStart=/usr/bin/yarn start
  ExecStartPre=/usr/bin/docker start mongodb
-Restart=always
 
 # Restart service after 10 seconds if node service crashes
 RestartSec=10
+Restart=always
 
 # Output to syslog
 StandardOutput=syslog
@@ -107,15 +106,47 @@ SyslogIdentifier=ispmonitor
 WantedBy=multi-user.target
 ```
 
-Timer service:  
+Timer service for running scrape command: 
+```
+# /etc/systemd/system/isp-scraper.service
+
+[Unit]
+Description=Run scraper for isp monitor every 30 minutes.
+
+[Service]
+Type=oneshot
+WorkingDirectory=YOUR_PROJECT_DIRECTORY
+ExecStart=/usr/bin/yarn scrape
+
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=ispmonitor-scraper
+
+[Install]
+WantedBy=multi-user.target
+```
+
+and
+
 ```
 # /etc/systemd/system/isp-scraper.timer
 
 [Unit]
 Description=Run scraper for isp monitor every 30 minutes.
 
-...
-TODO COMPLETE THIS SETUP
+[Timer]
+OnCalendar=*-*-* *:0/30:0
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
+```
+
+To enable both services on startup run:
+```bash
+sudo systemctl enable ispmonitor.service
+sudo systemctl enable ispmonitor-scraper.service
 ```
 
 # Node and yarn setup
