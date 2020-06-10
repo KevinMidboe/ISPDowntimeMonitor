@@ -90,7 +90,7 @@ hr {
   height: 100%;
   width: 1rem;
   background-color: var(--green);
-  position: relative;
+  position: unset;
   transition: transform 0.1s ease;
 }
 .event:first-of-type {
